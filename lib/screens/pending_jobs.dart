@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garagehubapp/Widgets/loader.dart';
+import 'package:garagehubapp/helperFunction.dart';
 
 import '../const.dart';
 
@@ -10,31 +12,44 @@ class PendingJobs extends StatefulWidget {
 }
 
 class _PendingJobsState extends State<PendingJobs> {
+
+
+  List  jobCardDetails = [];
+  var jobCard;
+  bool spinner = false;
+  HelperFunction _helperFunction = HelperFunction();
+
+
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getPendingJobCardDetails();
   }
-  void getPendingJobCardDetails(){
-var currentUid= FirebaseAuth.instance.currentUser.uid;
-//print(currentUid);
-   FirebaseFirestore.instance.collection('garages').doc(currentUid).get().then((value) {
-     jobCard= value.data()['jobCard'];
+
+
+
+  void getPendingJobCardDetails() async {
+  var currentUid = await FirebaseAuth.instance.currentUser.uid;
+
+   FirebaseFirestore.instance.collection(kGarages).doc(currentUid).get().then((value) {
+     jobCard = value.data()[kJobCard];
      print(jobCard);
-   }).whenComplete(() {
      setState(() {
-       JobCardDetails = jobCard;
+       jobCardDetails = jobCard;
      });
-   });
+   }).catchError((e){});
   }
 
 
-  List  JobCardDetails=List();
 
-var jobCard;
   @override
   Widget build(BuildContext context) {
+    var width = _helperFunction.getWidth(context);
+    var height = _helperFunction.getHeight(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -49,9 +64,10 @@ var jobCard;
       ),
       body: Column(
         children: [
+          jobCardDetails != null ?
           Expanded(
             child: ListView.builder(
-              itemCount: JobCardDetails.length,
+              itemCount: jobCardDetails.length,
               itemBuilder: (BuildContext context,int index){
                 return GestureDetector(
                   child: Container(
@@ -64,10 +80,10 @@ var jobCard;
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
 
-                           Text(JobCardDetails[index]['customerName'], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19,color: Colors.grey),),
+                           Text(jobCardDetails[index][kCustomerName], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19,color: Colors.grey),),
                             SizedBox(height: 10,),
-                            Text(JobCardDetails[index]['vehicleNo'].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
-                            Text(JobCardDetails[index]['vehicleType'].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
+                            Text(jobCardDetails[index][kVehicleNumber].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
+                            Text(jobCardDetails[index][kVehicleType].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
 
                           ],
                         ),
@@ -83,7 +99,7 @@ var jobCard;
 
               },
             ),
-          ),
+          ) : loader(spinner: spinner, height: height, width: width)
         ],
       ),
     );

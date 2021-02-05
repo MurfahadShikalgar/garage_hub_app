@@ -337,18 +337,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void addDataToDatabase(String uid){
     setState(() {
 
-      var garageName=garageNameController.text;
-      var ownerName=ownerNameController.text;
-      var garageType=garageTypeController.text;
-      var address=addressController.text;
-      var mobileNo= mobileNoController.text;
-      var websiteName= websiteNameController.text;
-      var emailId= emailController.text;
-      var password= passwordController.text;
+      var garageName = garageNameController.text;
+      var ownerName = ownerNameController.text;
+      var garageType = garageTypeController.text;
+      var address = addressController.text;
+      var mobileNo = mobileNoController.text;
+      var websiteName = websiteNameController.text;
+      var emailId = emailController.text;
+      var password = passwordController.text;
 
       if(garageName == ""){
         Toast.show("Garage Name Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      }else if(ownerName== "" ){
+      }else if(ownerName == "" ){
         Toast.show("Owner Name Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(garageType == ""){
         Toast.show("Garage Type Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
@@ -372,24 +372,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
         Map <String, dynamic>data = {
-          "garageName": garageName,
-          "ownerName": ownerName,
-          "typeOfGarage": garageType,
-          "Address": address,
-          "mobileNo": mobileNo,
-          "referenceNo": mobileNoController.text.substring(6, 10),
-          "websiteName": websiteName,
-          "dateOfRegistration": _helperFunction.getDate(),
-          "typeOfSubscription": "",
-          "email": emailId,
-          "password": password,
-          "uid": uid,
-          "validity": "",
-          "jobCard": [],
-          "garageLogo": "",
+          kGarageName: garageName,
+          kOwnerName: ownerName,
+          kGarageType: garageType,
+          kAddress: address,
+          kMobileNumber: mobileNo,
+          kReferenceNumber: mobileNoController.text.substring(6, 10),
+          kWebsiteUrl: websiteName,
+          kDateOfReg: _helperFunction.getDate(),
+          kSubscriptionType: "",
+          kEmail: emailId,
+          kPassword: password,
+          kUid: uid,
+          kValidity: "",
+          kJobCard: [],
+          kGarageLogo: "",
+          kNumberOfVehicles: 0,
         };
 
-        FirebaseFirestore.instance.collection("garages").doc(uid)
+        FirebaseFirestore.instance.collection(kGarages).doc(uid)
             .set(data)
             .whenComplete(() {
           Navigator.pushReplacement(context,

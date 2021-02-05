@@ -1,11 +1,11 @@
 
-
 import 'dart:ui';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:garagehubapp/Widgets/selection_card.dart';
+import 'package:garagehubapp/alert_screen.dart';
 import 'package:garagehubapp/const.dart';
 import 'package:garagehubapp/helperFunction.dart';
 import 'package:garagehubapp/screens/bike_jobcard_screen.dart';
@@ -13,6 +13,7 @@ import 'package:garagehubapp/screens/car_jobcard_screen.dart';
 import 'package:garagehubapp/screens/history_screen.dart';
 import 'package:garagehubapp/screens/pending_jobs.dart';
 import 'package:garagehubapp/settings_screens/setting_screen.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SelectionScreen extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   var tabColour= Color(0xfffafcfc);
 
   HelperFunction _helperFunction = HelperFunction();
+  Map<String,dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     var width = _helperFunction.getWidth(context);
     var height = _helperFunction.getHeight(context);
     var height2 = (width * 0.5) - 32;
+
   return Scaffold(
     appBar: AppBar(
 
@@ -108,5 +111,22 @@ class _SelectionScreenState extends State<SelectionScreen> {
     ),
   );
   }
+
+  getUserSubscriptionDetails() async {
+    var uid = await FirebaseAuth.instance.currentUser.uid;
+    var fData = FirebaseFirestore.instance.collection('garages').doc(uid).get().then((dataSnapshot){
+      setState(() {
+        userData = dataSnapshot.data();
+      });
+    }).catchError((e){
+      AlertScreen(context, AlertType.error, 'Error', "${e}", "OK", Colors.red);
+    });
+  }
 }
 
+
+bool isValidSubcription(Map<String,dynamic> userData){
+    var validity = userData[kValidity];
+    var subscrptionType = userData[kSubscriptionType];
+
+}

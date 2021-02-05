@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garagehubapp/helperFunction.dart';
 
 import '../const.dart';
 
@@ -17,7 +18,6 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
   TextEditingController vehicleTypeController= TextEditingController();
   TextEditingController addressController= TextEditingController();
 
-  String finalString="";
 
   var dateTimeNow = DateTime.now().millisecondsSinceEpoch;
   int value = 0;
@@ -26,8 +26,6 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDate();
-    print(finalString);
   }
 
   bool spinner= false;
@@ -146,7 +144,7 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
                     height: 70,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(18,24,0,0),
-                      child: Text("${finalString}", style: TextStyle( fontWeight:  FontWeight.w400,fontSize: 17, color: Colors.grey),),
+                      child: Text("${HelperFunction().getDate()}", style: TextStyle( fontWeight:  FontWeight.w400,fontSize: 17, color: Colors.grey),),
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -190,10 +188,6 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
                   onTap: (){
                     print("before $value");
                     updateJobCard();
-                    setState(() {
-                      value++;
-                      print("after $value");
-                    });
                   },
                 ),
               ),
@@ -215,19 +209,19 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
     print(uid);
     setState(() {
       Map <String, dynamic>data = {
-        'customerName': customerNameController.text,
-        'customerMobNo.': customerMobNoController.text,
-        'vehicleNo': vehicleNoController.text,
-        'vehicleType': vehicleTypeController.text,
-        'timestamp': dateTimeNow,
-        'date': finalString,
+        kCustomerName: customerNameController.text,
+        kCustomerMobileNumber: customerMobNoController.text,
+        kVehicleNumber: vehicleNoController.text,
+        kVehicleType: vehicleTypeController.text,
+        kTimeStamp: dateTimeNow,
+        kDate: HelperFunction().getDate(),
       };
 
 
       setState(() {
         var list=[data];
-        FirebaseFirestore.instance.collection('garages').doc(uid).update({
-          'jobCard': FieldValue.arrayUnion(list),
+        FirebaseFirestore.instance.collection(kGarages).doc(uid).update({
+          kJobCard : FieldValue.arrayUnion(list),
         });
         spinner = false;
       });
@@ -247,14 +241,6 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
   }
 
 
-  void getDate(){
-    var date= DateTime.now().toString();
-    var dateParse= DateTime.parse(date);
-    var formattedDate=  "${dateParse.day}-${dateParse.month}-${dateParse.year}";
-    setState(() {
-      finalString= formattedDate.toString();
-    });
-  }
 
 }
 

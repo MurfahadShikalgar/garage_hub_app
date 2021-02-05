@@ -5,33 +5,24 @@ import 'package:flutter/material.dart';
 import '../const.dart';
 
 class HistoryTable extends StatefulWidget {
-  final Index;
-  const HistoryTable ({ this.Index});
+  final Map<String,dynamic > jobCardDetails;
+
+  const HistoryTable({Key key, this.jobCardDetails}) : super(key: key);
+
   @override
   _HistoryTableState createState() => _HistoryTableState();
 }
 
 class _HistoryTableState extends State<HistoryTable> {
+
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getJobCardHistoryDetails();
   }
-  void getJobCardHistoryDetails(){
-    var currentUid= FirebaseAuth.instance.currentUser.uid;
-//print(currentUid);
-    FirebaseFirestore.instance.collection('garages').doc(currentUid).get().then((value) {
-      jobCard= value.data()['jobCard'];
-      print(jobCard);
-    }).whenComplete(() {
-      setState(() {
-        JobCardDetails = jobCard;
-      });
-    });
-  }
-var jobCard;
-  List  JobCardDetails=List();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +62,7 @@ var jobCard;
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(JobCardDetails[widget.Index]['Customer Name'],textScaleFactor: 1.5,),
+                          child: Text(widget.jobCardDetails[kCustomerName],textScaleFactor: 1.5,),
                         ),
                       ]
                   ),
@@ -83,7 +74,7 @@ var jobCard;
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(JobCardDetails[widget.Index]['Customer Mob No.'],textScaleFactor: 1.5,),
+                          child: Text(widget.jobCardDetails[kCustomerMobileNumber],textScaleFactor: 1.5,),
                         ),
                       ]
                   ),
@@ -95,7 +86,7 @@ var jobCard;
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(JobCardDetails[widget.Index]['Date'],textScaleFactor: 1.5,),
+                          child: Text(widget.jobCardDetails[kDate],textScaleFactor: 1.5,),
                         ),
                       ]
                   ),
@@ -107,7 +98,7 @@ var jobCard;
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(JobCardDetails[widget.Index]['Vehicle No'],textScaleFactor: 1.5,),
+                          child: Text(widget.jobCardDetails[kVehicleNumber],textScaleFactor: 1.5,),
                         ),
                       ]
                   ),
@@ -119,7 +110,7 @@ var jobCard;
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(JobCardDetails[widget.Index]['Vehicle Type'],textScaleFactor: 1.5,),
+                          child: Text(widget.jobCardDetails[kVehicleType],textScaleFactor: 1.5,),
                         ),
                       ]
                   ),

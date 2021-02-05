@@ -26,7 +26,6 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
   TextEditingController addressController= TextEditingController();
 
   HelperFunction _helperFunction = HelperFunction();
-  String finalString="";
 
   var dateTimeNow=DateTime.now().millisecondsSinceEpoch;
   int value=0;
@@ -35,8 +34,7 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDate();
-    print(finalString);
+
   }
 
 
@@ -156,7 +154,7 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
                     height: 70,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(18,24,0,0),
-                      child: Text("${finalString}", style: TextStyle( fontWeight:  FontWeight.w400,fontSize: 17, color: Colors.grey),),
+                      child: Text("${_helperFunction.getDate()}", style: TextStyle( fontWeight:  FontWeight.w400,fontSize: 17, color: Colors.grey),),
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -202,10 +200,7 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
                   onTap: (){
                     print("before $value");
                     updateJobCard();
-                    setState(() {
-                      value++;
-                      print("after $value");
-                    });
+
                   },
                 ),
               ),
@@ -226,20 +221,23 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
    print("uid is");
    print(uid);
    setState(() {
+
+     var date = _helperFunction.getDate();
+
      Map <String, dynamic> data={
-       'customerName': customerNameController.text,
-       'ustomerMobNo': customerMobNoController.text,
-       'vehicleNo': vehicleNoController.text,
-       'vehicleType': vehicleTypeController.text,
-       'timestamp': dateTimeNow,
-       'date': finalString,
+       kCustomerName : customerNameController.text,
+       kCustomerMobileNumber: customerMobNoController.text,
+       kVehicleNumber: vehicleNoController.text,
+       kVehicleType: vehicleTypeController.text,
+       kTimeStamp: dateTimeNow,
+       kDate: date,
      };
 
 
       setState(() {
         var list=[data];
-        FirebaseFirestore.instance.collection('garages').doc(uid).update({
-          'jobCard': FieldValue.arrayUnion(list),
+        FirebaseFirestore.instance.collection(kGarages).doc(uid).update({
+          kJobCard: FieldValue.arrayUnion(list),
         }).then((value){
           clearData();
           sendCreateJobMessage();
@@ -267,15 +265,5 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
       vehicleTypeController.text="";
     });
   }
-
-
- void getDate(){
-    var date= DateTime.now().toString();
-    var dateParse= DateTime.parse(date);
-    var formattedDate=  "${dateParse.day}-${dateParse.month}-${dateParse.year}";
-    setState(() {
-      finalString= formattedDate.toString();
-    });
- }
 
 }

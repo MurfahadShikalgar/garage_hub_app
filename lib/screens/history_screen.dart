@@ -10,29 +10,35 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+
+
+  List  jobCardDetails = [];
+  var jobCard;
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getHistoryDetails();
+    if(mounted){
+      getHistoryDetails();
+    }
   }
-  void getHistoryDetails(){
-    var currentUid= FirebaseAuth.instance.currentUser.uid;
-//print(currentUid);
-    FirebaseFirestore.instance.collection('garages').doc(currentUid).get().then((value) {
-      jobCard= value.data()['jobCard'];
+  void getHistoryDetails()async {
+    var currentUid = await FirebaseAuth.instance.currentUser.uid;
+    FirebaseFirestore.instance.collection(kGarages).doc(currentUid).get().then((value) {
+      jobCard = value.data()[kJobCard];
       print(jobCard);
-    }).whenComplete(() {
       setState(() {
-        JobCardDetails = jobCard;
+        jobCardDetails = jobCard;
       });
+    }).catchError((e){
+
     });
 
   }
 
 
-  List  JobCardDetails=List();
-var jobCard;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +58,7 @@ var jobCard;
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: JobCardDetails.length,
+              itemCount: jobCardDetails.length,
               itemBuilder: (BuildContext context,int index){
                 return GestureDetector(
                   child: Container(
@@ -65,10 +71,10 @@ var jobCard;
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
 
-                            Text(JobCardDetails[index]['customerName'], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19,color: Colors.grey),),
+                            Text(jobCardDetails[index][kCustomerName], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19,color: Colors.grey),),
                             SizedBox(height: 10,),
-                            Text(JobCardDetails[index]['vehicleNo'].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
-                            Text(JobCardDetails[index]['vehicleType'].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
+                            Text(jobCardDetails[index][kVehicleNumber].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
+                            Text(jobCardDetails[index][kVehicleType].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
 
                           ],
                         ),
@@ -78,7 +84,7 @@ var jobCard;
                   ),
                   onTap: (){
                     var Index= index;
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>HistoryTable(Index: Index,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> HistoryTable(jobCardDetails: jobCardDetails[index],)));
 
                   },
                 );

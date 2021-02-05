@@ -47,4 +47,31 @@ const decorationTextField= InputDecoration(
   ),
 );
 
+const kGarages = "garages";
+
+
+const kAddress = "address";
+const kDateOfReg = "dor";
+const kEmail = 'email';
+const kGarageLogo = 'garageLogoUrl';
+const kGarageName = 'garageName';
+const kMobileNumber = "mobileNumber";
+const kOwnerName = "ownerName";
+const kPassword = 'password';
+const kReferenceNumber = 'refNumber';
+const kGarageType = "garageType";
+const kSubscriptionType = "subscriptionType";
+const kUid = "uid";
+const kValidity = "validity";
+const kWebsiteUrl = "websiteUrl";
+const kNumberOfVehicles = "numberOfVehicles";
+
+const kJobCard = "jobCard";
+const kCustomerMobileNumber = "customerNumber";
+const kCustomerName = "customerName";
+const kDate = "date";
+const kTimeStamp = "timestamp";
+const kTotalAmount = "totalAmount";
+const kVehicleType = "vehicleType";
+const kVehicleNumber = "vehicleNumber";
 
