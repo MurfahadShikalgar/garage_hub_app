@@ -8,6 +8,7 @@ import 'package:garagehubapp/alert_screen.dart';
 import 'package:garagehubapp/helperFunction.dart';
 import 'package:garagehubapp/screens/pending_jobs.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:toast/toast.dart';
 
 import '../const.dart';
 
@@ -170,10 +171,6 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
                     ),
                   ),
                 ),
-                onTap: (){
-
-
-                },
               ),
 
 
@@ -198,8 +195,19 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
 
                   ),
                   onTap: (){
-                    print("before $value");
-                    updateJobCard();
+                    if(customerNameController.text == ""){
+                      Toast.show("Name cannot be empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+
+                    }else if(customerMobNoController.text.length < 10){
+                      Toast.show("Mobile number in valid", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    } else if(vehicleNoController.text == ""){
+                      Toast.show("Vehicle number cannot be empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    }else if(vehicleTypeController.text == ""){
+                      Toast.show("Vehicle type cannot be empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    }else{
+                      updateJobCard();
+
+                    }
 
                   },
                 ),
@@ -218,17 +226,16 @@ class _CarJobcardScreenState extends State<CarJobcardScreen> {
       spinner= true;
     });
    var uid= await FirebaseAuth.instance.currentUser.uid;
-   print("uid is");
    print(uid);
    setState(() {
 
      var date = _helperFunction.getDate();
 
      Map <String, dynamic> data={
-       kCustomerName : customerNameController.text,
-       kCustomerMobileNumber: customerMobNoController.text,
-       kVehicleNumber: vehicleNoController.text,
-       kVehicleType: vehicleTypeController.text,
+       kCustomerName : customerNameController.text.trim(),
+       kCustomerMobileNumber: customerMobNoController.text.trim(),
+       kVehicleNumber: vehicleNoController.text.trim(),
+       kVehicleType: vehicleTypeController.text.trim(),
        kTimeStamp: dateTimeNow,
        kDate: date,
      };

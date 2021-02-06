@@ -21,6 +21,12 @@ const kMainTextStyle = TextStyle(
     fontSize: 40,
     color: kRedColour);
 
+const kHeadingTextStyle = TextStyle(
+    fontFamily: 'Montserrat',
+    fontWeight: FontWeight.w700,
+    fontSize: 20,
+    color: kRedColour);
+
 
 const kAppBarTextStyle = TextStyle(fontSize: 20, fontFamily: 'Montserrat',fontWeight: FontWeight.w600 ,color: Colors.black);
 
@@ -65,6 +71,14 @@ const kUid = "uid";
 const kValidity = "validity";
 const kWebsiteUrl = "websiteUrl";
 const kNumberOfVehicles = "numberOfVehicles";
+const kDeviceIds = "deviceId";
+const kPushId = "pushId";
+const kTranscationHistory = 'transcationHistory';
+const kSmsDetails = 'smsDetails';
+
+const kGSmsApiKey = 'smsApi';
+const kGSmsSenderTXT = 'kGSmsSenderTXT';
+
 
 const kJobCard = "jobCard";
 const kCustomerMobileNumber = "customerNumber";

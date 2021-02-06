@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garagehubapp/helperFunction.dart';
+import 'package:toast/toast.dart';
 
 import '../const.dart';
 
@@ -186,8 +187,19 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
                     ),
                   ),
                   onTap: (){
-                    print("before $value");
-                    updateJobCard();
+
+                    if(customerNameController.text == ""){
+                      Toast.show("Name cannot be empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    }else if(customerMobNoController.text.length < 10){
+                      Toast.show("Mobile number in valid", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    } else if(vehicleNoController.text == ""){
+                      Toast.show("Vehicle number cannot be empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    }else if(vehicleTypeController.text == ""){
+                      Toast.show("Vehicle type cannot be empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    }else{
+                      updateJobCard();
+                    }
+
                   },
                 ),
               ),
@@ -209,14 +221,13 @@ class _BikeJobcardScreenState extends State<BikeJobcardScreen> {
     print(uid);
     setState(() {
       Map <String, dynamic>data = {
-        kCustomerName: customerNameController.text,
-        kCustomerMobileNumber: customerMobNoController.text,
-        kVehicleNumber: vehicleNoController.text,
-        kVehicleType: vehicleTypeController.text,
+        kCustomerName: customerNameController.text.trim(),
+        kCustomerMobileNumber: customerMobNoController.text.trim(),
+        kVehicleNumber: vehicleNoController.text.trim(),
+        kVehicleType: vehicleTypeController.text.trim(),
         kTimeStamp: dateTimeNow,
         kDate: HelperFunction().getDate(),
       };
-
 
       setState(() {
         var list=[data];

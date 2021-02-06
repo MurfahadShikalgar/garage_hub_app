@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garagehubapp/Widgets/loader.dart';
 import 'package:garagehubapp/helperFunction.dart';
+import 'package:garagehubapp/screens/finish_job_card_screen.dart';
 
 import '../const.dart';
 
@@ -34,15 +35,16 @@ class _PendingJobsState extends State<PendingJobs> {
   void getPendingJobCardDetails() async {
   var currentUid = await FirebaseAuth.instance.currentUser.uid;
 
-   FirebaseFirestore.instance.collection(kGarages).doc(currentUid).get().then((value) {
+   FirebaseFirestore.instance.collection(kGarages).doc(currentUid).snapshots().listen((value){
      jobCard = value.data()[kJobCard];
      print(jobCard);
      setState(() {
        jobCardDetails = jobCard;
      });
-   }).catchError((e){});
-  }
+   }).onError((e){
 
+   });
+  }
 
 
   @override
@@ -79,12 +81,10 @@ class _PendingJobsState extends State<PendingJobs> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                            Text(jobCardDetails[index][kCustomerName], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19,color: Colors.grey),),
                             SizedBox(height: 10,),
                             Text(jobCardDetails[index][kVehicleNumber].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
                             Text(jobCardDetails[index][kVehicleType].toString(),style: TextStyle(fontSize: 15,color: Colors.black),),
-
                           ],
                         ),
                       ),
@@ -92,7 +92,7 @@ class _PendingJobsState extends State<PendingJobs> {
                     ),
                   ),
                   onTap: (){
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FinishJobCardScreen(pendingJobCard: jobCardDetails[index], index: index,)));
 
                     },
                 );

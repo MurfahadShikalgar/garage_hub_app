@@ -26,6 +26,15 @@ class _SelectionScreenState extends State<SelectionScreen> {
   HelperFunction _helperFunction = HelperFunction();
   Map<String,dynamic> userData;
 
+  int validityNumber ;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserSubscriptionDetails();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -69,11 +78,45 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                    SelectionCard(width: width, height2: height2, height: height, imagePath: 'images/car.jpg', onPressed: (){
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => CarJobcardScreen()));
-                   },),
+
+                     if(validityNumber == 0){
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => CarJobcardScreen()));
+
+                     }else if(validityNumber == 1){
+                       _helperFunction.showAlertWithButtons(context, AlertType.warning, "No Subscription Found! ", "Subscribe to our app to create Job Card", "Subscribe", (){
+                         // Navigate To Subscrption Screen
+                       }, "Cancel");
+                     }else if(validityNumber == 2){
+                       _helperFunction.showAlertWithButtons(context, AlertType.warning, "Validity Over", "Recharge subscriptions to create jobcard", "Reacharge", (){
+                         // Navigate to Subscription
+                       }, "cancel");
+                     }else if(validityNumber == 3){
+                       _helperFunction.showAlertWithButtons(context, AlertType.warning, "Vehicles Quota Over", "You have used up your monthly Vehicle Quota!, Recharge or upgrade to higher package!!", "Reacharge", (){
+                         // Navigate to Subscription
+                       }, "cancel");
+                     }
+                   }
+                   ,),
 
                   SelectionCard(width: width, height2: height2, height: height, imagePath: 'images/bikes.jpg', onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => BikeJobcardScreen()));
+
+                    if(validityNumber == 0){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BikeJobcardScreen()));
+
+                    }else if(validityNumber == 1){
+                      _helperFunction.showAlertWithButtons(context, AlertType.warning, "No Subscription Found! ", "Subscribe to our app to create Job Card", "Subscribe", (){
+                        // Navigate To Subscrption Screen
+                      }, "Cancel");
+                    }else if(validityNumber == 2){
+                      _helperFunction.showAlertWithButtons(context, AlertType.warning, "Validity Over", "Recharge subscriptions to create jobcard", "Reacharge", (){
+                        // Navigate to Subscription
+                      }, "cancel");
+                    }else if(validityNumber == 3){
+                      _helperFunction.showAlertWithButtons(context, AlertType.warning, "Vehicles Quota Over", "You have used up your monthly Vehicle Quota!, Recharge or upgrade to higher package!!", "Reacharge", (){
+                        // Navigate to Subscription
+                      }, "cancel");
+                    }
+
 
                   },)
                   ],
@@ -117,16 +160,57 @@ class _SelectionScreenState extends State<SelectionScreen> {
     var fData = FirebaseFirestore.instance.collection('garages').doc(uid).get().then((dataSnapshot){
       setState(() {
         userData = dataSnapshot.data();
+        validityNumber = isValidSubcription(userData);
       });
+
     }).catchError((e){
       AlertScreen(context, AlertType.error, 'Error', "${e}", "OK", Colors.red);
     });
   }
-}
 
 
-bool isValidSubcription(Map<String,dynamic> userData){
+  int isValidSubcription(Map<String,dynamic> userData) {
     var validity = userData[kValidity];
     var subscrptionType = userData[kSubscriptionType];
+    var numberOfVehicles = userData[kNumberOfVehicles];
 
+    print(subscrptionType);
+
+    if (subscrptionType != "" && numberOfVehicles > 0) {
+      //
+      return 0;
+    } else if (subscrptionType == "") {
+      return 1;
+    } else if (numberOfVehicles == 0 ) {
+      return 3;
+    }
+      //validity
+//    }else if(){
+//
+//    }
+  }
+
+
+   showAlert(int number){
+    print(number);
+    if(number == 0){
+
+    }else if(number == 1){
+      _helperFunction.showAlertWithButtons(context, AlertType.warning, "No Subscription Found! ", "Subscribe to our app to create Job Card", "Subscriber", (){
+        // Navigate To Subscrption Screen
+      }, "Cancel");
+    }else if(number == 2){
+      _helperFunction.showAlertWithButtons(context, AlertType.warning, "Validity Over", "Recharge subscriptions to create jobcard", "Reacharge", (){
+        // Navigate to Subscription
+      }, "cancel");
+    }else if(number == 3){
+      _helperFunction.showAlertWithButtons(context, AlertType.warning, "Vehicles Quota Over", "You have used up your monthly Vehicle Quota!, Recharge or upgrade to higher package!!", "Reacharge", (){
+        // Navigate to Subscription
+      }, "cancel");
+    }
+  }
 }
+
+
+
+

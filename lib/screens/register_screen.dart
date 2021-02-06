@@ -336,29 +336,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void addDataToDatabase(String uid){
     setState(() {
+      spinner = true;
 
-      var garageName = garageNameController.text;
-      var ownerName = ownerNameController.text;
+    });
+
+    setState(() {
+
+      var garageName = garageNameController.text.trim();
+      var ownerName = ownerNameController.text.trim();
       var garageType = garageTypeController.text;
-      var address = addressController.text;
-      var mobileNo = mobileNoController.text;
-      var websiteName = websiteNameController.text;
-      var emailId = emailController.text;
-      var password = passwordController.text;
+      var address = addressController.text.trim();
+      var mobileNo = mobileNoController.text.trim();
+      var websiteName = websiteNameController.text.trim();
+      var emailId = emailController.text.trim();
+      var password = passwordController.text.trim();
 
       if(garageName == ""){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Garage Name Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(ownerName == "" ){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Owner Name Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(garageType == ""){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Garage Type Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(address == ""){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Address Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(mobileNo == ""){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Mobile No. Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(emailId == ""){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Email Id Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else if(password == ""){
+        setState(() {
+          spinner = false;
+
+        });
+
         Toast.show("Password Cannot be Empty", context, duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }else {
 
@@ -388,6 +428,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           kJobCard: [],
           kGarageLogo: "",
           kNumberOfVehicles: 0,
+          kDeviceIds : "",
+          kPushId : "",
+          kTranscationHistory : [],
+          kSmsDetails : {},
+
+
         };
 
         FirebaseFirestore.instance.collection(kGarages).doc(uid)
